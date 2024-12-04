@@ -1,3 +1,6 @@
+import java.beans.EventHandler;
+
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -94,6 +97,8 @@ public class RouletteView extends BorderPane {
         chip.setTranslateY(y);
         chipOverlay.getChildren().add(chip);
     }
+
+     
 
     public void show(){
         stage.show();

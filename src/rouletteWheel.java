@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+// will handle logic for spinning the wheel, the result of the wheel.
+// and keep track of current state
+
 public class rouletteWheel {
     private Player player;
     private rouletteBall ball;
@@ -26,4 +29,6 @@ public class rouletteWheel {
     public void assignColor(int number){
 
     }
+
+   
 }
