@@ -16,12 +16,7 @@ public class roulletteController {
         
     }
 
-    private void handlePlay(){
-        wheel.spinWheel();
-        int result = wheel.getResult();
-        System.out.println("The wheel landed on: " + result);
-
-    }
+    
 
 
 }
