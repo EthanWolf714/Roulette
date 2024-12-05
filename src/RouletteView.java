@@ -30,11 +30,11 @@ public class RouletteView extends BorderPane {
         stage.setScene(scene);
     }
 
-     private void setupView() {
+    private void setupView() {
+        // Create the roulette wheel
         Circle wheel = new Circle(100, Color.DARKGREEN); // Green circle as the wheel for now.
         wheel.setStroke(Color.BLACK);
         wheel.setStrokeWidth(2);
-
 
         chipOverlay = new Pane(); // Chip Overlay
         chipOverlay.setPickOnBounds(false); // Allows clicks to pass through transparent areas
@@ -48,44 +48,39 @@ public class RouletteView extends BorderPane {
         bettingGrid.setVgap(5);
         bettingGrid.setAlignment(Pos.CENTER);
 
-        // Example of betting (to be adjusted)
-        for (int i = 0; i < 37; i++) {
-            Button numberButton = new Button(String.valueOf(i));
-            numberButton.setPrefSize(50, 50);
-            bettingGrid.add(numberButton, i % 12, i / 12); // Arrange in a grid
+        // Add betting options to the grid
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 12; j++) {
+                Label numberLabel = new Label(String.valueOf(i * 12 + j + 1));
+                numberLabel.setStyle("-fx-border-color: black; -fx-padding: 5;");
+                bettingGrid.add(numberLabel, j, i);
+            }
         }
 
-        // Color betting at the bottom (to be adjusted)
-        HBox colorBetting = new HBox(10);
-        colorBetting.setAlignment(Pos.CENTER);
-        colorBetting.setPadding(new Insets(10));
-        Button redBet = new Button("Red");
-        redBet.setStyle("-fx-background-color: red; -fx-text-fill: white;");
-        Button blackBet = new Button("Black");
-        blackBet.setStyle("-fx-background-color: black; -fx-text-fill: white;");
-        Button greenBet = new Button("Green");
-        greenBet.setStyle("-fx-background-color: green; -fx-text-fill: white;");
-        colorBetting.getChildren().addAll(redBet, blackBet, greenBet);
+        // Add 0 and 00
+        Label zeroLabel = new Label("0");
+        zeroLabel.setStyle("-fx-border-color: black; -fx-padding: 5;");
+        bettingGrid.add(zeroLabel, 0, 3);
+        Label doubleZeroLabel = new Label("00");
+        doubleZeroLabel.setStyle("-fx-border-color: black; -fx-padding: 5;");
+        bettingGrid.add(doubleZeroLabel, 1, 3);
 
-        // Place betting grid and color betting in the bottom part (to be adjusted)
-        VBox bettingArea = new VBox(10, bettingGrid, colorBetting);
-        bettingArea.setAlignment(Pos.CENTER);
-        setBottom(bettingArea);
+        this.setBottom(bettingGrid);
 
-        // Chip selection dropdown (adjusting chip prices)
+        // Chip selector and buttons
+        VBox controls = new VBox(10);
+        controls.setPadding(new Insets(10));
+        controls.setAlignment(Pos.CENTER);
+
         chipSelector = new ComboBox<>();
-        chipSelector.getItems().addAll("50", "100", "500", "1000");
-        chipSelector.setValue("50"); // Default value
-        HBox chipSelectionArea = new HBox(new Label("Select Chip: "), chipSelector);
-        chipSelectionArea.setAlignment(Pos.CENTER);
-        chipSelectionArea.setPadding(new Insets(10));
+        chipSelector.getItems().addAll("1", "5", "10", "25", "50", "100");
+        chipSelector.setValue("1");
 
-        // Play button at the top
-        Button playButton = new Button("Play");
-        playButton.setPrefSize(100, 50);
-        VBox topArea = new VBox(playButton, chipSelectionArea);
-        topArea.setAlignment(Pos.CENTER);
-        setTop(topArea);
+        Button spinButton = new Button("Spin");
+        Button resetButton = new Button("Reset");
+
+        controls.getChildren().addAll(new Label("Select Chip:"), chipSelector, spinButton, resetButton);
+        this.setRight(controls);
     }
 
     public void addChip(double x, double y) { // Method to later be used by controller to create chips on places bet.
@@ -94,8 +89,6 @@ public class RouletteView extends BorderPane {
         chip.setTranslateY(y);
         chipOverlay.getChildren().add(chip);
     }
-
-     
 
     public void show(){
         stage.show();
