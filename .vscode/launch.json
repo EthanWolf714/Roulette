@@ -9,13 +9,15 @@
             "name": "App",
             "request": "launch",
             "mainClass": "App",
-            "projectName": "Roulette_8fbe2cbe"
+            "projectName": "Roulette_8fbe2cbe",
+            "vmArgs": "--module-path vmArgsLibs\\openjfx-22.0.2_windows-x64_bin-sdk\\javafx-sdk-22.0.2\\lib --add-modules javafx.controls,javafx.fxml --enable-preview"
         },
         {
             "type": "java",
             "name": "Current File",
             "request": "launch",
-            "mainClass": "${file}"
+            "mainClass": "${file}",
+            "vmArgs": "--module-path vmArgsLibs\\openjfx-22.0.2_windows-x64_bin-sdk\\javafx-sdk-22.0.2\\lib --add-modules javafx.controls,javafx.fxml --enable-preview"
         },
         {
             "type": "java",
