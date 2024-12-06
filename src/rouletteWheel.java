@@ -1,64 +1,73 @@
 import java.util.ArrayList;
 import java.util.Random;
+import javafx.animation.RotateTransition;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 
-public class rouletteWheel {
-    private Player player;
-    private rouletteBall ball;
-    private ArrayList<String> numbers;
-    private ArrayList<String> colors;
-    private String result;
+public class rouletteWheel extends BorderPane {
+    private ArrayList<rouletteColor> wheel;
+    private rouletteColor result;
+    private Stage stage;      // Reference to the primary stage  
+    private Pane chipOverlay; // Pane for placing chips
+    private ComboBox<String> chipSelector; // Dropdown for chip selection
+    private Circle ball; // Roulette ball
+    private ImageView wheelImageView; // ImageView for the roulette wheel
+    private ImageView bettingBoardImageView; // ImageView for the betting board
 
-    public rouletteWheel(){
-        this.numbers = new ArrayList<>();
-        this.colors = new ArrayList<>();
-        this.ball = new rouletteBall();
+    public rouletteWheel() {
+        wheel = new ArrayList<>();
         initializeWheel();
     }
 
     private void initializeWheel() {
+        // Add numbers and colors to the wheel
         for (int i = 1; i <= 36; i++) {
-            numbers.add(String.valueOf(i));
-            assignColor(i);
+            if ((i >= 1 && i <= 10) || (i >= 19 && i <= 28)) {
+                if (i % 2 == 0) {
+                    wheel.add(new Black(i));
+                } else {
+                    wheel.add(new Red(i));
+                }
+            } else {
+                if (i % 2 == 0) {
+                    wheel.add(new Red(i));
+                } else {
+                    wheel.add(new Black(i));
+                }
+            }
         }
-        // Add 0 and 00 for American roulette
-        numbers.add("0");
-        colors.add("Green");
-        numbers.add("00");
-        colors.add("Green");
+        // Add 0 and 00
+        wheel.add(new Green(0));
+        wheel.add(new Green(37)); // 37 represents 00
     }
 
-    public void spinWheel(){
+    public void spinWheel() {
         Random rand = new Random();
-        result = numbers.get(rand.nextInt(numbers.size()));
+        result = wheel.get(rand.nextInt(wheel.size()));
     }
 
-    public String getResult(){
+    public rouletteColor getResult() {
         return result;
     }
 
-    public ArrayList<String> getNumbers(){
-        return numbers;
-    }
-
-    public ArrayList<String> getColors(){
-        return colors;
-    }
-
-    private void assignColor(int number){
-        if (number == 0) {
-            colors.add("Green");
-        } else if ((number >= 1 && number <= 10) || (number >= 19 && number <= 28)) {
-            if (number % 2 == 0) {
-                colors.add("Black");
-            } else {
-                colors.add("Red");
-            }
-        } else {
-            if (number % 2 == 0) {
-                colors.add("Red");
-            } else {
-                colors.add("Black");
-            }
-        }
+    public ArrayList<rouletteColor> getWheel() {
+        return wheel;
     }
 }
