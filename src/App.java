@@ -4,12 +4,15 @@ import javafx.stage.Stage;
 public class App extends Application{
 
     @Override
-    public void start(Stage arg0) throws Exception {
+    public void start(Stage primaryStage) throws Exception {
+        RouletteView view = new RouletteView(primaryStage);
+        view.show();
         
     }
 
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        Application.launch(args);
+        
     }
 
 }
