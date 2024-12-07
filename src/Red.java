@@ -1,11 +1,12 @@
 public class Red extends rouletteColor {
 
-    public Red(){
-        this.color = "Red";
-        this.multiplier = 2;
-
+    
+    public Red(int num){
+        super(num);
     }
 
-
+    public int getMultiplier(){
+        return 2;
+    }
 
 }
