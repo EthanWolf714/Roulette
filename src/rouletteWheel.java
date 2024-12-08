@@ -1,25 +1,10 @@
-import java.util.ArrayList;
+
 import java.util.Random;
-import javafx.animation.RotateTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
+
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
-import javafx.util.Duration;
+
 
 public class rouletteWheel extends BorderPane {
     private ArrayList<rouletteColor> wheel;
@@ -30,38 +15,32 @@ public class rouletteWheel extends BorderPane {
         initializeWheel();
     }
 
-    private void initializeWheel() {
-        // Add numbers and colors to the wheel
-        for (int i = 1; i <= 36; i++) {
-            if ((i >= 1 && i <= 10) || (i >= 19 && i <= 28)) {
-                if (i % 2 == 0) {
-                    wheel.add(new Black(i));
-                } else {
-                    wheel.add(new Red(i));
-                }
-            } else {
-                if (i % 2 == 0) {
-                    wheel.add(new Red(i));
-                } else {
-                    wheel.add(new Black(i));
-                }
-            }
+    
+    private void initializeNumberPostions(double wheelRadius){
+        numberPositionsX = new double[37];
+        numberPositionsY = new double[37];
+        double centerX = wheelRadius;
+        double centerY = wheelRadius;
+        for(int i = 0; i < 37; i++){
+            double angle = i * (360.0 / 37);
+            numberPositionsX[i] = centerX + wheelRadius * Math.cos(Math.toRadians(angle));
+            numberPositionsY[i] = centerY + wheelRadius * Math.sin(Math.toRadians(angle));
+
         }
-        // Add 0 and 00
-        wheel.add(new Green(0));
-        wheel.add(new Green(37)); // 37 represents 00
     }
 
-    public void spinWheel() {
-        Random rand = new Random();
-        result = wheel.get(rand.nextInt(wheel.size()));
+    public int spin() { 
+        int randomNumber = random.nextInt(37); 
+        ball.setCenterX(numberPositionsX[randomNumber]); 
+        ball.setCenterY(numberPositionsY[randomNumber]); 
+        return randomNumber;
     }
 
-    public rouletteColor getResult() {
-        return result;
+    public int getWinningNumber(){
+        return winningNumber;
     }
 
-    public ArrayList<rouletteColor> getWheel() {
-        return wheel;
+    public void setWinningNumber(int winningNumber){
+        this.winningNumber = winningNumber;
     }
 }

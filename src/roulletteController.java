@@ -1,22 +1,15 @@
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+import javafx.animation.Interpolator;
+import javafx.animation.PathTransition;
 import javafx.animation.RotateTransition;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
+import javafx.geometry.Bounds;
+import javafx.scene.shape.ArcTo;
+import javafx.scene.shape.ClosePath;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+
 import javafx.util.Duration;
 
 public class roulletteController {
@@ -25,57 +18,70 @@ public class roulletteController {
      Handle button clicks, chip placements, and coordination between
       the UI (RouletteView) and game state (RouletteWheel or other model classes).
      */
-    private final RouletteView view;
-    private final rouletteWheel wheel;
+    private  RouletteView view;
+    private  rouletteWheel wheel;
 
-    public roulletteController(Stage stage){
-        this.view = new RouletteView(stage);
-        this.wheel = new rouletteWheel();
-        setupEventHandlers();
+    public roulletteController(RouletteView view, rouletteWheel wheel){
+        
+        this.view = view;
+        this.wheel = wheel;
+        addEventHandlers();
+        System.out.println("Controller activated");
     }
 
-    private void setupEventHandlers() {
-        // Handle Spin Button Click
-        Button spinButton = (Button) view.lookup(".button");
-        spinButton.setOnAction(event -> {
-            wheel.spinWheel();
-            updateView();
+    private void addEventHandlers() {
+        System.out.println("adding handlers");
+        view.getSpinButton().setOnAction(event -> spinBall()); 
+        view.getResetButton().setOnAction(event -> view.resetWheel());
+    }
+
+    public void spinAndHandleResult(){
+        spinAndGetResult().thenAccept(result -> { 
+            System.out.println("Ball landed on number: " + result); 
+        }).exceptionally(e -> { 
+            e.printStackTrace(); 
+            return null; 
         });
-
-        // Handle Reset Button Click
-        Button resetButton = (Button) view.lookup(".button");
-        resetButton.setOnAction(event -> {
-            resetWheel();
-        });
     }
 
-    private void updateView() {
-        rouletteColor result = wheel.getResult();
-        // Update the view with the result
-        // For simplicity, let's just print the result to the console
-        System.out.println("Wheel Result: " + result.getNumber() + " " + result.getColor());
-
-        // Update the ball position based on the result
-        updateBallPosition(result.getNumber());
+    public CompletableFuture<Integer> spinAndGetResult() { 
+        return spinBall(); // Assuming this method returns the result after spinning 
     }
 
-    private void updateBallPosition(int number) {
-        // Logic to update the ball position based on the number
-        // This is a placeholder and should be replaced with actual logic
-        double angle = calculateAngleForNumber(number);
-        view.updateBallPosition(angle);
+    private CompletableFuture<Integer> spinBall() { // Calculate the center of the wheelContainer 
+        double wheelRadius = view.getWheelContainer().getWidth() / 2 - 15; // Adjust for ball size 
+        Bounds bounds = view.getWheelContainer().localToScene(view.getWheelContainer().getBoundsInLocal()); 
+        double centerX = bounds.getMinX() + bounds.getWidth() / 2; double centerY = bounds.getMinY() + bounds.getHeight() / 2; 
+        Path circularPath = new Path(); circularPath.getElements().add(new MoveTo(centerX, centerY - wheelRadius)); 
+        circularPath.getElements().add(new ArcTo(wheelRadius, wheelRadius, 0, centerX, centerY + wheelRadius, false, false)); 
+        circularPath.getElements().add(new ArcTo(wheelRadius, wheelRadius, 0, centerX, centerY - wheelRadius, false, false)); 
+        circularPath.getElements().add(new ClosePath()); PathTransition pathTransition = new PathTransition(); 
+        pathTransition.setDuration(Duration.seconds(5)); 
+        pathTransition.setPath(circularPath); 
+        pathTransition.setNode(view.getBall()); 
+        pathTransition.setCycleCount(PathTransition.INDEFINITE); // To keep the ball moving continuously 
+        pathTransition.setInterpolator(Interpolator.LINEAR); // Linear for constant speed 
+        RotateTransition rotateTransition = new RotateTransition(Duration.seconds(5), view.getWheelImageView()); 
+        rotateTransition.setByAngle(360); 
+        rotateTransition.setInterpolator(Interpolator.LINEAR); // Linear for constant speed 
+        rotateTransition.setCycleCount(1); 
+        
+        CompletableFuture<Integer> future = new CompletableFuture<>();
+        rotateTransition.setOnFinished(event -> { 
+            pathTransition.stop(); 
+            int randomNumber = wheel.spin();
+            System.out.println("Ball landed on number: " + randomNumber); 
+            wheel.setWinningNumber(randomNumber);
+            future.complete(randomNumber);
+        }); 
+        pathTransition.play(); 
+        rotateTransition.play();
+        return future;
+        
     }
 
-    private double calculateAngleForNumber(int number) {
-        // Placeholder logic to calculate the angle for a given number
-        // This should be replaced with actual logic based on the wheel layout
-        return number * 10; // Example: each number is 10 degrees apart
-    }
+    
+    
 
-    private void resetWheel() {
-        // Reset the wheel and clear any placed chips
-        // For simplicity, let's just print a reset message to the console
-        System.out.println("Wheel Reset");
-        view.clearChips();
-    }
+   
 }
