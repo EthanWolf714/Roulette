@@ -24,13 +24,7 @@ import javafx.util.Duration;
 public class rouletteWheel extends BorderPane {
     private ArrayList<rouletteColor> wheel;
     private rouletteColor result;
-    private Stage stage;      // Reference to the primary stage  
-    private Pane chipOverlay; // Pane for placing chips
-    private ComboBox<String> chipSelector; // Dropdown for chip selection
-    private Circle ball; // Roulette ball
-    private ImageView wheelImageView; // ImageView for the roulette wheel
-    private ImageView bettingBoardImageView; // ImageView for the betting board
-
+    
     public rouletteWheel() {
         wheel = new ArrayList<>();
         initializeWheel();

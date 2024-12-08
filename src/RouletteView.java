@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -18,6 +17,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RouletteView extends BorderPane {
 
@@ -32,10 +34,10 @@ public class RouletteView extends BorderPane {
         this.stage = stage;   // Assign the stage
         setupView();
 
-        // Set up the scene and add it to the stage
         Scene scene = new Scene(this, 800, 600);
         stage.setTitle("Roulette Wheel");
         stage.setScene(scene);
+        stage.setResizable(false);
     }
 
     private void setupView() {
@@ -64,17 +66,15 @@ public class RouletteView extends BorderPane {
         // Create the betting board with an image
         Image bettingBoardImage = new Image("file:img/bettingboard.jpg");
         bettingBoardImageView = new ImageView(bettingBoardImage);
-        bettingBoardImageView.setFitWidth(800);
-        bettingBoardImageView.setFitHeight(200);
+        bettingBoardImageView.setPreserveRatio(true); // Preserve the aspect ratio
+        bettingBoardImageView.setFitWidth(600); // Adjust the width to fit nicely
+        bettingBoardImageView.setFitHeight(175); // Adjust the height to fit nicely
 
-        GridPane bettingGrid = new GridPane();
-        bettingGrid.setPadding(new Insets(10));
-        bettingGrid.setHgap(5);
-        bettingGrid.setVgap(5);
-        bettingGrid.setAlignment(Pos.CENTER);
-        bettingGrid.add(bettingBoardImageView, 0, 0);
+        StackPane bettingBoardPane = new StackPane(bettingBoardImageView);
+        bettingBoardPane.setPadding(new Insets(10));
+        bettingBoardPane.setAlignment(Pos.CENTER);
 
-        this.setBottom(bettingGrid);
+        this.setBottom(bettingBoardPane);
 
         // Chip selector and buttons
         VBox controls = new VBox(10);
@@ -102,9 +102,6 @@ public class RouletteView extends BorderPane {
 
         controls.getChildren().addAll(chipLabel, chipSelector, spinButton, resetButton);
         this.setRight(controls);
-
-        // Add event handler for spin button
-        spinButton.setOnAction(event -> spinBall());
     }
 
     private void spinBall() {
@@ -114,14 +111,17 @@ public class RouletteView extends BorderPane {
         rotateTransition.play();
     }
 
-    public void addChip(double x, double y) { // Method to later be used by controller to create chips on places bet.
-        Circle chip = new Circle(10, Color.BLUE); // Temporary. Switch statement to be used later.
-        chip.setTranslateX(x);
-        chip.setTranslateY(y);
-        chipOverlay.getChildren().add(chip);
+    public void updateBallPosition(double angle) {
+        // Logic to update the ball position based on the angle
+        // This is a placeholder and should be replaced with actual logic
+        ball.setRotate(angle);
     }
 
-    public void show(){
+    public void clearChips() {
+        chipOverlay.getChildren().clear();
+    }
+
+    public void show() {
         stage.show();
     }
 }
