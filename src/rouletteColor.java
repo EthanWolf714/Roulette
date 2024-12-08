@@ -1,13 +1,15 @@
 public abstract class rouletteColor {
-    protected String color;
     protected int multiplier;
+    protected int number;
 
-    public String getColor(){
-        return color;
+    public rouletteColor(int num){
+        this.number = num;
     }
 
-    public int getMultiplier(){
-        return multiplier;
+    public int getNumber(){
+        return number;
     }
+
+    public abstract int getMultiplier();
 
 }
