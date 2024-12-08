@@ -11,6 +11,7 @@ public class rouletteWheel extends BorderPane {
    private double[] numberPositionsX;
    private double[] numberPositionsY;
    private Random random;
+   private int winningNumber;
 
     public rouletteWheel(Circle ball, double wheelRadius) {
         this.ball = ball;
@@ -37,5 +38,13 @@ public class rouletteWheel extends BorderPane {
         ball.setCenterX(numberPositionsX[randomNumber]); 
         ball.setCenterY(numberPositionsY[randomNumber]); 
         return randomNumber;
+    }
+
+    public int getWinningNumber(){
+        return winningNumber;
+    }
+
+    public void setWinningNumber(int winningNumber){
+        this.winningNumber = winningNumber;
     }
 }

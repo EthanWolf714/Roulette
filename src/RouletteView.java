@@ -36,6 +36,7 @@ public class RouletteView extends BorderPane {
     private ImageView bettingBoardImageView; // ImageView for the betting board
     private Button spinButton; 
     private Button resetButton;
+    private StackPane wheelContainer;
     
  
 
@@ -71,7 +72,7 @@ public class RouletteView extends BorderPane {
 
         chipOverlay = new Pane(); // Chip Overlay
         chipOverlay.setPickOnBounds(false); // Allows clicks to pass through transparent areas
-        StackPane wheelContainer = new StackPane(wheelImageView, ball, chipOverlay);
+        wheelContainer = new StackPane(wheelImageView, ball, chipOverlay);
         wheelContainer.setAlignment(Pos.CENTER);
         this.setCenter(wheelContainer);
 
@@ -162,12 +163,16 @@ public class RouletteView extends BorderPane {
         chipOverlay.getChildren().clear();
     }
 
+    public StackPane getWheelContainer(){
+        return wheelContainer;
+    }
+
     public void resetWheel() {
-    Bounds bounds = wheelImageView.localToScene(wheelImageView.getBoundsInLocal());
-    ball.setCenterX(bounds.getMinX() + bounds.getWidth() / 2);
-    ball.setCenterY(bounds.getMinY() + bounds.getHeight() / 2);
-    clearChips();
-    System.out.println("Wheel reset to center");
+        Bounds bounds = this.getWheelContainer().getBoundsInParent();
+        ball.setCenterX(bounds.getMinX() + bounds.getWidth() / 2);
+        ball.setCenterY(bounds.getMinY() + bounds.getHeight() / 2);
+        clearChips();
+        System.out.println("Wheel reset to center");
     }
 
 }
