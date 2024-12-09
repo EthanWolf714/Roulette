@@ -1,18 +1,13 @@
-## Getting Started
+## README
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Hello! And welcome to our Roulette Game, it is incomplete as of this moment. We spent a good time trying to figure things out, but just ran out of time when we tried to do all these images. Things just didn't work out the way we intended with all of our other assignments and schedules being filled to the brim from OPL and Formal Languages for the most of us. There were just a lot of projects to do, and not a lot of time to actually sit down and complete them all in the way we intended.
 
-## Folder Structure
+However we're here to explain why we did, what we did. 
 
-The workspace contains two folders by default, where:
+Luke, the man behind the Chip and rouletteColor decided to actually split up the rouletteColor pretty easily into numerous subclasses. That way we could gather the actual multipliers for numbers and retrieve what kind of number they were then actually implement it into the game.
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## Debugging Collaborators
+https://github.com/robrichardson27/Roulette-Game-Javafx/tree/master - Our main collaborator, we needed an idea of what to base on, but we didn't want to copy it. We wanted to make something original, and ended up backing us into a corner.
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+Total Hours: Around 108

@@ -14,13 +14,14 @@ import javafx.scene.shape.Path;
 
 import javafx.util.Duration;
 
-public class roulletteController {
+public class rouletteController {
     private RouletteView view;
     private rouletteWheel wheel;
     private Player player;
     private BettingBoard bettingBoard;
+    private rouletteColor winningResult;
 
-    public roulletteController(RouletteView view, rouletteWheel wheel) {
+    public rouletteController(RouletteView view, rouletteWheel wheel) {
         this.view = view;
         this.wheel = wheel;
         this.player = new Player("Player", 500); // Starting balance of 500
@@ -43,7 +44,7 @@ public class roulletteController {
     public void spinAndHandleResult() {
         spinAndGetResult().thenAccept(result -> {
             System.out.println("Ball landed on number: " + result);
-            bettingBoard.resolveBets();
+            bettingBoard.resolveBets(winningResult);
         }).exceptionally(e -> {
             e.printStackTrace();
             return null;
@@ -51,7 +52,7 @@ public class roulletteController {
     }
 
     public CompletableFuture<Integer> spinAndGetResult() {
-        return spinBall(); // Assuming this method returns the result after spinning
+        return spinBall();
     }
 
     private CompletableFuture<Integer> spinBall() {
@@ -82,6 +83,7 @@ public class roulletteController {
         rotateTransition.setOnFinished(event -> {
             pathTransition.stop();
             int randomNumber = wheel.spin();
+            winningResult = wheel.getResult();
             double[] position = wheel.getNumberPosition(randomNumber);
             view.getBall().setTranslateX(position[0]);
             view.getBall().setTranslateY(position[1]);
@@ -119,8 +121,6 @@ public class roulletteController {
     }
 
     private String determineBetPosition(double x, double y) {
-        // Placeholder logic to determine the bet position based on the coordinates
-        // This should be replaced with actual logic based on the layout of the betting board
         for (Map.Entry<String, double[]> entry : view.getBettingPositions().entrySet()) {
             double[] coords = entry.getValue();
             if (Math.abs(coords[0] - x) < 25 && Math.abs(coords[1] - y) < 25) {

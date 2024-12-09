@@ -4,9 +4,9 @@ import java.util.concurrent.ExecutionException;
 
 public class BettingBoard {
     private Map<Player, Map<String, Integer>> bets;
-    private roulletteController controller;
+    private rouletteController controller;
 
-    public BettingBoard(roulletteController controller) {
+    public BettingBoard(rouletteController controller) {
         this.controller = controller;
         bets = new HashMap<>();
     }
@@ -22,31 +22,26 @@ public class BettingBoard {
         }
     }
 
-    public void resolveBets() {
-        controller.spinAndGetResult().thenAccept(winningNumber -> {
-            String winningOption = determineWinningOption(winningNumber);
-            for (Map.Entry<Player, Map<String, Integer>> entry : bets.entrySet()) {
-                Player player = entry.getKey();
-                Map<String, Integer> playerBets = entry.getValue();
-                for (Map.Entry<String, Integer> betEntry : playerBets.entrySet()) {
-                    String betOption = betEntry.getKey();
-                    int betAmount = betEntry.getValue();
-                    if (betOptionMatches(betOption, winningOption, winningNumber)) {
-                        int winnings = calculateWinnings(betAmount, betOption);
-                        player.winBet(winnings);
-                        System.out.println(player.getName() + " won $" + winnings + "!");
-                    } else {
-                        System.out.println(player.getName() + " lost their bet on " + betOption);
-                    }
+    public void resolveBets(rouletteColor winningNumber) {
+        String winningOption = determineWinningOption(winningNumber);
+        for (Map.Entry<Player, Map<String, Integer>> entry : bets.entrySet()) {
+            Player player = entry.getKey();
+            Map<String, Integer> playerBets = entry.getValue();
+            for (Map.Entry<String, Integer> betEntry : playerBets.entrySet()) {
+                String betOption = betEntry.getKey();
+                int betAmount = betEntry.getValue();
+                if (betOptionMatches(betOption, winningOption, winningNumber.getNumber())) {
+                    int winnings = calculateWinnings(betAmount, betOption);
+                    player.winBet(winnings);
+                    System.out.println(player.getName() + " won $" + winnings + "!");
+                } else {
+                    System.out.println(player.getName() + " lost their bet on " + betOption);
                 }
-                player.clearBet();
             }
-            bets.clear();
-            controller.getView().updateBalance(controller.getPlayer().getBalance());
-        }).exceptionally(e -> {
-            e.printStackTrace();
-            return null;
-        });
+            player.clearBet();
+        }
+        bets.clear();
+        controller.getView().updateBalance(controller.getPlayer().getBalance());
     }
 
     private boolean betOptionMatches(String betOption, String winningOption, int winningNumber) {
@@ -101,10 +96,10 @@ public class BettingBoard {
         }
     }
 
-    private String determineWinningOption(int winningNumber) {
-        if (winningNumber == 0 || winningNumber == 37) {
+    private String determineWinningOption(rouletteColor winningNumber) {
+        if (winningNumber instanceof Green) {
             return "Green";
-        } else if (winningNumber % 2 == 0) {
+        } else if (winningNumber instanceof Black) {
             return "Black";
         } else {
             return "Red";

@@ -7,7 +7,7 @@ public class App extends Application{
     public void start(Stage primaryStage) throws Exception {
         RouletteView view = new RouletteView(primaryStage);
         rouletteWheel wheel = new rouletteWheel(view.getBall(), view.getWheelImageView().getFitWidth() / 2); 
-        roulletteController controller = new roulletteController(view, wheel);
+        rouletteController controller = new rouletteController(view, wheel);
         view.show();
         
     }
